@@ -23,6 +23,14 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         
+    - name: List project structure
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Directory contents:"
+        ls -la
+        echo "Looking for pom.xml:"
+        find . -name "pom.xml" -type f
+        
     - name: Cache Maven dependencies
       uses: actions/cache@v3
       with:
@@ -32,9 +40,11 @@ jobs:
         
     - name: Run tests
       run: mvn clean test
+      working-directory: .
       
     - name: Build application
       run: mvn clean compile javafx:jlink
+      working-directory: .
       
     - name: Upload test results
       uses: actions/upload-artifact@v3
@@ -69,6 +79,7 @@ jobs:
         
     - name: Build and package
       run: mvn clean package javafx:jlink
+      working-directory: .
       
     - name: Create distribution (Unix)
       if: runner.os != 'Windows'
@@ -124,6 +135,7 @@ jobs:
         
     - name: Run dependency check
       run: mvn org.owasp:dependency-check-maven:check
+      working-directory: .
       
     - name: Upload security scan results
       uses: actions/upload-artifact@v3
