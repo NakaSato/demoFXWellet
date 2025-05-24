@@ -64,3 +64,8 @@ pids
 
 # virtual machine crash logs
 hs_err_pid*
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3

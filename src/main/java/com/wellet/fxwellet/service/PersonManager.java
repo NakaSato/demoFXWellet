@@ -4,19 +4,32 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.util.stream.Collectors;
 
+import com.wellet.fxwellet.dao.PersonDAO;
 import com.wellet.fxwellet.model.Person;
 import com.wellet.fxwellet.model.Student;
 import com.wellet.fxwellet.model.Teacher;
 
 /**
- * PersonManager class demonstrating composition and data management
+ * PersonManager class demonstrating composition and data management with SQLite
  */
 public class PersonManager {
     private ObservableList<Person> people;
+    private PersonDAO personDAO;
     
     public PersonManager() {
+        this.personDAO = new PersonDAO();
         this.people = FXCollections.observableArrayList();
-        initializeSampleData();
+        loadDataFromDatabase();
+        
+        // Initialize sample data only if database is empty
+        if (people.isEmpty()) {
+            initializeSampleData();
+        }
+    }
+    
+    private void loadDataFromDatabase() {
+        people.clear();
+        people.addAll(personDAO.getAllPeople());
     }
     
     public ObservableList<Person> getPeople() {
@@ -25,10 +38,18 @@ public class PersonManager {
     
     public void addPerson(Person person) {
         people.add(person);
+        personDAO.savePerson(person);
     }
     
     public void removePerson(Person person) {
         people.remove(person);
+        personDAO.deletePerson(person.getEmail());
+    }
+    
+    public void updatePerson(Person person) {
+        personDAO.savePerson(person);
+        // Refresh the list to reflect changes
+        loadDataFromDatabase();
     }
     
     public ObservableList<Person> getStudents() {
@@ -93,6 +114,11 @@ public class PersonManager {
         teacher2.addSubject("Statistics");
         teacher2.addSubject("Discrete Mathematics");
         
-        people.addAll(student1, student2, student3, teacher1, teacher2);
+        // Save to database
+        addPerson(student1);
+        addPerson(student2);
+        addPerson(student3);
+        addPerson(teacher1);
+        addPerson(teacher2);
     }
 }

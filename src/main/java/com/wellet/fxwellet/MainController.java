@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.wellet.fxwellet.model.Person;
@@ -97,21 +98,50 @@ public class MainController implements Initializable {
     
     private void showPersonDetails(Person person) {
         StringBuilder details = new StringBuilder();
-        details.append("=== PERSON DETAILS ===\n\n");
-        details.append("Basic Information:\n");
+        details.append("╔══════════════════════════════════════════════════════════════╗\n");
+        details.append("║                      PERSON DETAILS                         ║\n");
+        details.append("╚══════════════════════════════════════════════════════════════╝\n\n");
+        
+        details.append("📋 Basic Information:\n");
+        details.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
         details.append(person.getBasicInfo()).append("\n\n");
-        details.append("Role: ").append(person.getRole()).append("\n\n");
-        details.append("Specific Details:\n");
+        
+        details.append("👤 Role: ").append(person.getRole()).append("\n\n");
+        
+        details.append("📊 Specific Details:\n");
+        details.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
         details.append(person.getDetails()).append("\n\n");
         
-        // Demonstrate polymorphism
+        // Demonstrate polymorphism with enhanced formatting
         if (person instanceof Student) {
             Student student = (Student) person;
-            details.append("Academic Status: ").append(student.getGradeLevel()).append("\n");
+            details.append("🎓 Academic Status: ").append(student.getGradeLevel()).append("\n");
+            details.append("📈 Performance Level: ");
+            double gpa = student.getGpa();
+            if (gpa >= 3.7) {
+                details.append("Excellent (").append(gpa).append("/4.0)");
+            } else if (gpa >= 3.0) {
+                details.append("Good (").append(gpa).append("/4.0)");
+            } else if (gpa >= 2.0) {
+                details.append("Satisfactory (").append(gpa).append("/4.0)");
+            } else {
+                details.append("Needs Improvement (").append(gpa).append("/4.0)");
+            }
+            details.append("\n");
         } else if (person instanceof Teacher) {
             Teacher teacher = (Teacher) person;
-            details.append("Experience Level: ").append(teacher.getExperienceLevel()).append("\n");
-            details.append("Number of Subjects: ").append(teacher.getSubjectCount()).append("\n");
+            details.append("💼 Experience Level: ").append(teacher.getExperienceLevel()).append("\n");
+            details.append("📚 Number of Subjects: ").append(teacher.getSubjectCount()).append("\n");
+            details.append("💰 Salary Range: ");
+            double salary = teacher.getSalary();
+            if (salary >= 80000) {
+                details.append("Senior Level");
+            } else if (salary >= 60000) {
+                details.append("Mid Level");
+            } else {
+                details.append("Entry Level");
+            }
+            details.append(" ($").append(String.format("%,.2f", salary)).append(")\n");
         }
         
         detailsArea.setText(details.toString());
@@ -119,11 +149,25 @@ public class MainController implements Initializable {
     
     private void updateStats() {
         StringBuilder stats = new StringBuilder();
-        stats.append(String.format("Total People: %d | ", personManager.getPersonCount()));
-        stats.append(String.format("Students: %d | ", personManager.getStudentCount()));
-        stats.append(String.format("Teachers: %d\n", personManager.getTeacherCount()));
-        stats.append(String.format("Average GPA: %.2f | ", personManager.getAverageGPA()));
-        stats.append(String.format("Average Salary: $%.2f", personManager.getAverageSalary()));
+        stats.append("📊 ");
+        stats.append(String.format("Total: %d", personManager.getPersonCount()));
+        stats.append(" | ");
+        stats.append(String.format("🎓 Students: %d", personManager.getStudentCount()));
+        stats.append(" | ");
+        stats.append(String.format("👨‍🏫 Teachers: %d", personManager.getTeacherCount()));
+        
+        if (personManager.getStudentCount() > 0 || personManager.getTeacherCount() > 0) {
+            stats.append(" | ");
+            if (personManager.getStudentCount() > 0) {
+                stats.append(String.format("📈 Avg GPA: %.2f", personManager.getAverageGPA()));
+            }
+            if (personManager.getStudentCount() > 0 && personManager.getTeacherCount() > 0) {
+                stats.append(" | ");
+            }
+            if (personManager.getTeacherCount() > 0) {
+                stats.append(String.format("💰 Avg Salary: $%,.0f", personManager.getAverageSalary()));
+            }
+        }
         
         statsLabel.setText(stats.toString());
     }
@@ -132,12 +176,45 @@ public class MainController implements Initializable {
     private void onAddPersonClick() {
         try {
             String name = nameField.getText().trim();
-            int age = Integer.parseInt(ageField.getText().trim());
+            String ageText = ageField.getText().trim();
             String email = emailField.getText().trim();
             String role = roleComboBox.getValue();
             
-            if (name.isEmpty() || email.isEmpty()) {
-                showAlert("Error", "Name and email are required!");
+            // Enhanced validation
+            if (name.isEmpty()) {
+                showAlert("Validation Error", "📝 Name is required!");
+                nameField.requestFocus();
+                return;
+            }
+            
+            if (ageText.isEmpty()) {
+                showAlert("Validation Error", "📅 Age is required!");
+                ageField.requestFocus();
+                return;
+            }
+            
+            if (email.isEmpty()) {
+                showAlert("Validation Error", "📧 Email is required!");
+                emailField.requestFocus();
+                return;
+            }
+            
+            if (!email.contains("@")) {
+                showAlert("Validation Error", "📧 Please enter a valid email address!");
+                emailField.requestFocus();
+                return;
+            }
+            
+            if (role == null) {
+                showAlert("Validation Error", "👤 Please select a role!");
+                roleComboBox.requestFocus();
+                return;
+            }
+            
+            int age = Integer.parseInt(ageText);
+            if (age <= 0 || age > 150) {
+                showAlert("Validation Error", "📅 Please enter a valid age (1-150)!");
+                ageField.requestFocus();
                 return;
             }
             
@@ -146,13 +223,37 @@ public class MainController implements Initializable {
             if ("Student".equals(role)) {
                 String studentId = studentIdField.getText().trim();
                 String major = majorField.getText().trim();
-                double gpa = Double.parseDouble(gpaField.getText().trim());
+                String gpaText = gpaField.getText().trim();
+                
+                if (studentId.isEmpty() || major.isEmpty() || gpaText.isEmpty()) {
+                    showAlert("Validation Error", "🎓 All student fields are required!");
+                    return;
+                }
+                
+                double gpa = Double.parseDouble(gpaText);
+                if (gpa < 0.0 || gpa > 4.0) {
+                    showAlert("Validation Error", "📊 GPA must be between 0.0 and 4.0!");
+                    gpaField.requestFocus();
+                    return;
+                }
                 
                 newPerson = new Student(name, age, email, studentId, major, gpa);
             } else {
                 String employeeId = employeeIdField.getText().trim();
                 String department = departmentField.getText().trim();
-                double salary = Double.parseDouble(salaryField.getText().trim());
+                String salaryText = salaryField.getText().trim();
+                
+                if (employeeId.isEmpty() || department.isEmpty() || salaryText.isEmpty()) {
+                    showAlert("Validation Error", "👨‍🏫 All teacher fields are required!");
+                    return;
+                }
+                
+                double salary = Double.parseDouble(salaryText);
+                if (salary < 0) {
+                    showAlert("Validation Error", "💰 Salary must be a positive number!");
+                    salaryField.requestFocus();
+                    return;
+                }
                 
                 Teacher teacher = new Teacher(name, age, email, employeeId, department, salary);
                 String subject = subjectField.getText().trim();
@@ -167,8 +268,13 @@ public class MainController implements Initializable {
             updateStats();
             clearForm();
             
+            // Show success message
+            showSuccessAlert("Success", "✅ " + role + " '" + name + "' has been added successfully!");
+            
         } catch (NumberFormatException e) {
-            showAlert("Error", "Please enter valid numbers for age, GPA, and salary!");
+            showAlert("Input Error", "🔢 Please enter valid numbers for numeric fields!");
+        } catch (Exception e) {
+            showAlert("Error", "❌ An unexpected error occurred: " + e.getMessage());
         }
     }
     
@@ -176,12 +282,22 @@ public class MainController implements Initializable {
     private void onDeletePersonClick() {
         Person selectedPerson = personListView.getSelectionModel().getSelectedItem();
         if (selectedPerson != null) {
-            personManager.removePerson(selectedPerson);
-            refreshPersonList();
-            updateStats();
-            detailsArea.clear();
+            // Show confirmation dialog
+            Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmAlert.setTitle("Confirm Deletion");
+            confirmAlert.setHeaderText("Delete Person");
+            confirmAlert.setContentText("Are you sure you want to delete '" + selectedPerson.getName() + "'?\n\nThis action cannot be undone.");
+            
+            Optional<ButtonType> result = confirmAlert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                personManager.removePerson(selectedPerson);
+                refreshPersonList();
+                updateStats();
+                detailsArea.clear();
+                showSuccessAlert("Success", "🗑️ '" + selectedPerson.getName() + "' has been deleted successfully!");
+            }
         } else {
-            showAlert("Warning", "Please select a person to delete!");
+            showAlert("Warning", "⚠️ Please select a person to delete!");
         }
     }
     
@@ -222,6 +338,14 @@ public class MainController implements Initializable {
     
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    private void showSuccessAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

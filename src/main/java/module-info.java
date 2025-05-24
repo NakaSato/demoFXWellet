@@ -6,6 +6,9 @@ module com.wellet.demofxwellet {
     requires javafx.web;
     requires javafx.swing;
     
+    // Database support
+    requires java.sql;
+    
     // Other UI libraries that are available in build.gradle.kts
     requires transitive org.controlsfx.controls;
     requires transitive com.dlsc.formsfx;

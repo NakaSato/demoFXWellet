@@ -20,6 +20,9 @@ dependencies {
     implementation("org.controlsfx:controlsfx:11.1.2")
     implementation("com.dlsc.formsfx:formsfx-core:11.6.0")
     implementation("org.kordamp.ikonli:ikonli-javafx:12.3.1")
+
+    // SQLite database
+    implementation("org.xerial:sqlite-jdbc:3.43.2.2")
 }
 
 javafx {

@@ -4,35 +4,49 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wellet.fxwellet.MainController">
+<BorderPane stylesheets="@styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wellet.fxwellet.MainController">
    <top>
-      <VBox spacing="10.0">
+      <VBox spacing="16.0" styleClass="card">
          <children>
-            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="OOP Concepts Demo - Person Management System" />
-            <Label fx:id="statsLabel" style="-fx-font-size: 12px;" text="Loading statistics..." />
+            <Label styleClass="header-title" text="Person Management System" />
+            <Label fx:id="statsLabel" styleClass="stats-label" text="Loading statistics..." />
             <Separator />
          </children>
          <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
       </VBox>
    </top>
    <left>
-      <VBox prefWidth="300.0" spacing="10.0">
+      <VBox prefWidth="350.0" spacing="20.0" styleClass="left-panel">
          <children>
-            <Label style="-fx-font-weight: bold;" text="People List" />
-            <HBox spacing="10.0">
+            <VBox spacing="12.0">
                <children>
-                  <RadioButton fx:id="allRadio" text="All" />
-                  <RadioButton fx:id="studentsRadio" text="Students" />
-                  <RadioButton fx:id="teachersRadio" text="Teachers" />
+                  <Label styleClass="section-header" text="Filter People" />
+                  <HBox spacing="16.0">
+                     <children>
+                        <RadioButton fx:id="allRadio" text="All" />
+                        <RadioButton fx:id="studentsRadio" text="Students" />
+                        <RadioButton fx:id="teachersRadio" text="Teachers" />
+                     </children>
+                  </HBox>
                </children>
-            </HBox>
-            <ListView fx:id="personListView" prefHeight="200.0" />
-            <Button onAction="#onDeletePersonClick" text="Delete Selected" />
+            </VBox>
+            
+            <VBox spacing="12.0">
+               <children>
+                  <Label styleClass="section-header" text="People List" />
+                  <ListView fx:id="personListView" prefHeight="220.0" />
+                  <Button onAction="#onDeletePersonClick" styleClass="danger" text="Delete Selected" />
+               </children>
+            </VBox>
+            
             <Separator />
-            <Label style="-fx-font-weight: bold;" text="Add New Person" />
-            <GridPane hgap="5.0" vgap="5.0">
+            
+            <VBox spacing="16.0">
+               <children>
+                  <Label styleClass="section-header" text="Add New Person" />
+                  <GridPane styleClass="form-grid" hgap="12.0" vgap="12.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="80.0" />
                   <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
@@ -49,52 +63,57 @@
                   <RowConstraints minHeight="10.0" vgrow="NEVER" />
                </rowConstraints>
                <children>
-                  <Label text="Name:" />
+                  <Label styleClass="form-label" text="Name:" />
                   <TextField fx:id="nameField" GridPane.columnIndex="1" />
-                  <Label text="Age:" GridPane.rowIndex="1" />
+                  <Label styleClass="form-label" text="Age:" GridPane.rowIndex="1" />
                   <TextField fx:id="ageField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="Email:" GridPane.rowIndex="2" />
+                  <Label styleClass="form-label" text="Email:" GridPane.rowIndex="2" />
                   <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label text="Role:" GridPane.rowIndex="3" />
-                  <ComboBox fx:id="roleComboBox" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Student ID:" GridPane.rowIndex="4" />
+                  <Label styleClass="form-label" text="Role:" GridPane.rowIndex="3" />
+                  <ComboBox fx:id="roleComboBox" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label styleClass="form-label" text="Student ID:" GridPane.rowIndex="4" />
                   <TextField fx:id="studentIdField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Label text="Major:" GridPane.rowIndex="5" />
+                  <Label styleClass="form-label" text="Major:" GridPane.rowIndex="5" />
                   <TextField fx:id="majorField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <Label text="GPA:" GridPane.rowIndex="6" />
+                  <Label styleClass="form-label" text="GPA:" GridPane.rowIndex="6" />
                   <TextField fx:id="gpaField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <Label text="Employee ID:" GridPane.rowIndex="4" />
+                  <Label styleClass="form-label" text="Employee ID:" GridPane.rowIndex="4" />
                   <TextField fx:id="employeeIdField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Label text="Department:" GridPane.rowIndex="5" />
+                  <Label styleClass="form-label" text="Department:" GridPane.rowIndex="5" />
                   <TextField fx:id="departmentField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <Label text="Salary:" GridPane.rowIndex="6" />
+                  <Label styleClass="form-label" text="Salary:" GridPane.rowIndex="6" />
                   <TextField fx:id="salaryField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <Label text="Subject:" GridPane.rowIndex="7" />
+                  <Label styleClass="form-label" text="Subject:" GridPane.rowIndex="7" />
                   <TextField fx:id="subjectField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                </children>
             </GridPane>
-            <HBox spacing="10.0">
+            <HBox spacing="12.0">
                <children>
                   <Button onAction="#onAddPersonClick" text="Add Person" />
-                  <Button onAction="#onClearFormClick" text="Clear Form" />
+                  <Button onAction="#onClearFormClick" styleClass="secondary" text="Clear Form" />
                </children>
             </HBox>
+               </children>
+            </VBox>
          </children>
          <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
       </VBox>
    </left>
    <center>
-      <VBox spacing="10.0">
+      <VBox spacing="16.0" styleClass="center-panel">
          <children>
-            <Label style="-fx-font-weight: bold;" text="Person Details" />
-            <TextArea fx:id="detailsArea" editable="false" prefHeight="400.0" style="-fx-font-family: monospace;" />
-            <Label style="-fx-font-style: italic;" text="Select a person from the list to view details. This demonstrates polymorphism - each person type displays different information." wrapText="true" />
+            <Label styleClass="section-header" text="Person Details" />
+            <TextArea fx:id="detailsArea" editable="false" prefHeight="450.0" wrapText="true" />
+            <Label style="-fx-font-style: italic; -fx-text-fill: #7f8c8d; -fx-font-size: 12px;" text="Select a person from the list to view details. This demonstrates polymorphism - each person type displays different information." wrapText="true" />
          </children>
          <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
       </VBox>
    </center>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
 </BorderPane>
