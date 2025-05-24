@@ -1,16 +1,20 @@
 module com.wellet.demofxwellet {
+
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.graphics;
     requires javafx.web;
+    requires javafx.swing;
+    
+    // Other UI libraries that are available in build.gradle.kts
+    requires transitive org.controlsfx.controls;
+    requires transitive com.dlsc.formsfx;
+    requires transitive org.kordamp.ikonli.javafx;
 
-    requires org.controlsfx.controls;
-    requires com.dlsc.formsfx;
-    requires net.synedra.validatorfx;
-    requires org.kordamp.ikonli.javafx;
-    requires org.kordamp.bootstrapfx.core;
-    requires eu.hansolo.tilesfx;
-    requires com.almasb.fxgl.all;
+    opens com.wellet.fxwellet to javafx.fxml;
 
-    opens com.wellet.demofxwellet to javafx.fxml;
-    exports com.wellet.demofxwellet;
+    exports com.wellet.fxwellet;
+    exports com.wellet.fxwellet.model;
+    exports com.wellet.fxwellet.service;
+
 }
