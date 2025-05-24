@@ -29,16 +29,27 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
         
+    - name: List project structure
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Directory contents:"
+        ls -la
+        echo "Looking for pom.xml:"
+        find . -name "pom.xml" -type f
+        
     - name: Run SpotBugs
       run: mvn compile spotbugs:check
       continue-on-error: true
+      working-directory: .
       
     - name: Run Checkstyle
       run: mvn checkstyle:check
       continue-on-error: true
+      working-directory: .
       
     - name: Generate test coverage
       run: mvn clean test jacoco:report
+      working-directory: .
       
     - name: Upload coverage reports
       uses: codecov/codecov-action@v3
